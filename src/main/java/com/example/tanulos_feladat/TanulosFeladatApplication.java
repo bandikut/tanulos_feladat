@@ -1,6 +1,8 @@
 package com.example.tanulos_feladat;
 
+import com.example.tanulos_feladat.model.Author;
 import com.example.tanulos_feladat.model.Book;
+import com.example.tanulos_feladat.repository.AuthorRepository;
 import com.example.tanulos_feladat.repository.BookRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -15,13 +17,25 @@ public class TanulosFeladatApplication {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(BookRepository bookRepository) {
+    CommandLineRunner commandLineRunner(BookRepository bookRepository, AuthorRepository authorRepository) {
         return args -> {
-            Book hyperion = new Book(
-                    "Dan", "Simmons", "Hyperion 1", "NIJO1616161", true, 670
-            );
-            bookRepository.save(hyperion);
-			System.out.println(bookRepository.findAll());
+//            Book hyperion = new Book(
+//                     "Hyperion", "9789634195764", true, 538
+//            );
+//            Book terror = new Book(
+//                     "Terror", "9789634194347", true, 714
+//            );
+//            Book istenek = new Book(
+//                     "Istenek és emberek", "9789634335061", true, 240
+//            );
+//            bookRepository.save(hyperion);
+//            bookRepository.save(terror);
+//            bookRepository.save(istenek);
+//			System.out.println(bookRepository.findAll());
+//            Author dans = new Author("Dan", "Simmons");
+//            Author jonesb = new Author("Jo", "Nesbo");
+//            authorRepository.save(dans);
+//            authorRepository.save(jonesb);
         };
     }
 

@@ -3,9 +3,11 @@ package com.example.tanulos_feladat.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
-@NoArgsConstructor
-//@AllArgsConstructor
+
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
 @ToString
@@ -35,39 +37,25 @@ public class Book {
     private Long id;
 
     @Column(
-            name = "author_first_name",
-            nullable = false,
-            columnDefinition = "TEXT"
-    )
-    private String authorFisrstName;
-
-    @Column(
-            name = "author_last_name",
-            nullable = false,
-            columnDefinition = "TEXT"
-    )
-    private String authorLastName;
-
-    @Column(
             name = "title",
             nullable = false,
-            columnDefinition = "TEXT"
+            columnDefinition = "VARCHAR(150)"
     )
     private String title;
 
     @Column(
             name = "isbn",
             nullable = true,
-            columnDefinition = "TEXT"
+            columnDefinition = "VARCHAR(13)"
     )
     private String isbn;
 
     @Column(
-            name = "status",
+            name = "is_available",
             updatable = true,
             nullable = true
     )
-    private boolean status;
+    private boolean isAvailable;
 
     @Column(
             name = "number_of_pages",
@@ -75,12 +63,29 @@ public class Book {
     )
     private int numberOfPages;
 
-    public Book(String authorFisrstName, String authorLastName, String title, String isbn, boolean status, int numberOfPages) {
-        this.authorFisrstName = authorFisrstName;
-        this.authorLastName = authorLastName;
+
+    @Column(
+            name = "moly_book_id",
+            nullable = true
+    )
+    private int molyBookID;
+
+    @ManyToMany
+    @JoinTable(
+            name = "book_author",
+            joinColumns = @JoinColumn(
+                    name = "book_id",
+                    foreignKey = @ForeignKey(name = "fk_author_id")),
+            inverseJoinColumns = @JoinColumn(
+                    name = "author_id",
+                    foreignKey = @ForeignKey(name = "fk_book_id"))
+    )
+    private Set<Author> authors = new HashSet<Author>();
+
+    public Book(String title, String isbn, boolean isAvailable, int numberOfPages) {
         this.title = title;
         this.isbn = isbn;
-        this.status = status;
+        this.isAvailable = isAvailable;
         this.numberOfPages = numberOfPages;
     }
 }
