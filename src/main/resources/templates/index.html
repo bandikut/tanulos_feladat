@@ -5,14 +5,65 @@
 <head>
     <title>BookShelf</title>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/styles/css/style.css}" />
-
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/css/style.css}"/>
+    <link th:href="@{/webjars/bootstrap/4.6.0/css/bootstrap.min.css}" rel="stylesheet"/>
 </head>
 
 <body>
 
 <p>bookshelf</p>
 
+<table class="table">
+    <thead>
+    <tr>
+        <th> cím</th>
+        <!--        <th> szerző(k) </th>-->
+        <th> oldalak száma</th>
+        <th> megvan?</th>
+        <th> ISBN</th>
+        <th> id</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${books.empty}">
+        <td colspan="2"> Nincsenek könyvek</td>
+    </tr>
+    <tr th:each="book : ${books}">
+        <td><span th:text="${book.title}"> cím </span></td>
+        <!--        <td><span th:text="${book.authors}"> szerző(k) </span></td>-->
+        <td><span th:text="${book.numberOfPages}"> oldalak száma </span></td>
+        <td><span th:text="${book.isAvailable}"> megvan? </span></td>
+        <td><span th:text="${book.isbn}"> ISBN </span></td>
+        <td><span th:text="${book.id}"> id </span></td>
+    </tr>
+    </tbody>
+</table>
+
+<table>
+    <thead>
+    <tr>
+        <th>szerző neve</th>
+        <th>skönyve(i)</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${authors.empty}">
+        <td> nincsenek szerzők</td>
+    </tr>
+    <tr th:each="author : ${authors}">
+        <td><span th:text="${author.firstName} +'  '+ ${author.lastName}"></span></td>
+        <td><span th:text="${author.title}"></span></td>
+    </tr>
+    </tbody>
+</table>
+
+
+<body>
+</table>
+
+<script th:src="@{/webjars/jquery/3.3.1-2/jquery.slim.js}"></script>
+<script th:src="@{/webjars/bootstrap/4.6.0/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/webjars/popper.js/2.5.4/umd/popper.min.js}"></script>
 </body>
 
 </html>
