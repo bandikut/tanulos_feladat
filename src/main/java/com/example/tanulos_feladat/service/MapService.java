@@ -62,5 +62,10 @@ public class MapService {
                 .collect(Collectors.toList());
     }
 
+    public void addBook(BookDTO bookDTO) {
+        Book book = new ModelMapper().map(bookDTO, Book.class);
+        bookRepository.save(book);
+    }
+
 
 }
