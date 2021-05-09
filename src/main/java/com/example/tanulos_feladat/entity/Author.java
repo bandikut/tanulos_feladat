@@ -26,8 +26,8 @@ public class Author {
     @Column(name = "author_last_name", nullable = false, columnDefinition = "VARCHAR(150)")
     private String authorLastName;
 
-//    @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
-//    private Set<Book> books = new HashSet<Book>();
+    @ManyToMany(mappedBy = "authorList", fetch = FetchType.LAZY)
+    private Set<Book> booksList = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "book_id", foreignKey = @ForeignKey(name = "fk_book_author"))

@@ -35,12 +35,12 @@ public class Book {
     @Column(name = "number_of_pages")
     private int numberOfPages;
 
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(name = "book_author",
-//            joinColumns = @JoinColumn(name = "book_id", foreignKey = @ForeignKey(name = "fk_author_id")),
-//            inverseJoinColumns = @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_book_id"))
-//    )
-//    private Set<Author> authors = new HashSet<Author>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "book_author",
+            joinColumns = @JoinColumn(name = "book_id", foreignKey = @ForeignKey(name = "fk_author_id")),
+            inverseJoinColumns = @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_book_id"))
+    )
+    private Set<Author> authorList = new HashSet<>();
 
     public Book(Long id,String title, String isbn, boolean isAvailable, int numberOfPages) {
         this.id = id;
