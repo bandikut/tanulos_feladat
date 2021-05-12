@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html>
+
+<head>
+    <title>BookShelf</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/css/style.css}"/>
+    <link th:href="@{/webjars/bootstrap/4.6.0/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+</head>
+
+<body>
+
+<div class="container-fluid d-flex justify-content-center align-items-center flex-column"
+     style="min-height: 100vh; background-color: #293C5B">
+    <div>
+        <form th:action="@{/{id}(deleteauthor=${author.id})}" th:object="${author}" method="post">
+            <input type="hidden" th:field="${author}"/>
+            <button type="submit" class="btn btn-outline-danger m-2" onClick="return confirm('sure?')">Szerzőt töröl
+            </button>
+        </form>
+    </div>
+    <div>
+        <form th:action="@{/authorstobooks/update(id=${author.id})}" class="" method="post" th:object="${author}"
+              style="color: #285756 !important;">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="fname" class="display-4 text-light">Keresztnév</label>
+                    <input type="text" class="form-control" id="fname" th:value="${author.firstName}"
+                           th:field="*{firstName}">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="lname" class="display-4 text-light">Vezetéknév</label>
+                    <input type="text" class="form-control" id="lname" th:value="${author.lastName}"
+                           th:field="*{lastName}">
+                </div>
+            </div>
+            <div class="form-row d-flex flex-column">
+                <div class="display-4 text-light">Könyve(i):</div>
+                <ul th:each="book : ${author.bookList}">
+                    <li class="text-light" style="list-style-type: none !important;">
+                        <span>Cím: </span> <span th:text="${book.title} + ','"></span>
+                        <span>ISBN: </span> <span th:text="${book.isbn} + ','"></span>
+                        <span>Megvan?: </span> <span th:text="${book.isAvailable} ? 'igen' : 'nincs'"></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="form-row d-flex justify-content-sm-center mt-2 mb-4">
+                <input type="submit" class="btn  btn-success btn-block mt-2 mb-2" value="mentés"/>
+                <input type="reset" class="btn  btn-danger m-2" value="kiürít"/>
+                <a th:href="@{/allbook}" class="btn btn-dark m-2">vissza az összeshez</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script th:src="@{/webjars/jquery/3.3.1-2/jquery.slim.js}"></script>
+<script th:src="@{/webjars/bootstrap/4.6.0/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/webjars/popper.js/2.5.4/umd/popper.min.js}"></script>
+</body>
+
+</html>

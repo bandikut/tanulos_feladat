@@ -1,11 +1,15 @@
 package com.example.tanulos_feladat.dto;
 
-import com.example.tanulos_feladat.entity.Book;
 import lombok.Data;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class AuthorDTO {
+    private Long id;
     private String firstName;
     private String lastName;
-    private String title;
+    private Set<BookDTO> bookList = new HashSet<>();
+
 }

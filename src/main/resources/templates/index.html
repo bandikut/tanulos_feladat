@@ -19,28 +19,55 @@
     </div>
 </div>
 
-<div class="container-fluid" style="min-height: 100vh">
+<!--<th:block th:insert="fragments/authors"/>-->
+
+<div class="container-fluid" style="min-height: 70vh">
     <div class="row m-5">
-        <div class="col-lg-2 col-md-3 col-6" th:each="book : ${books}">
+        <div class="col-4 col-sm-6 col-md-6 col-lg-3" th:each="author : ${authorPagination}">
             <div class="card mb-1 mt-1">
                 <!--                <img class="card-img-top" src="" alt="Card image cap">-->
                 <div class="card-title text-light p-2" style="background-color: #293C5B">
-                    <h5 class="card-title" th:text="${book.title}">Card title</h5>
+                    <h5 class="card-title" th:text="${author.firstName} +'  '+  ${author.lastName}">Card title</h5>
                 </div>
                 <div class="card-body">
-                    <span>oldalszám </span><p class="card-text" th:text="${book.numberOfPages}"></p>
-                    <span class="text-muted">ISBN </span> <p class="card-text text-muted" th:text="${book.isbn}"></p>
+                    <h6>Könyvei</h6>
+                    <p th:if="${author.bookList.empty}">
+                        <span>Nincsenek könyvei</span>
+                    </p>
+                    <p th:each="book : ${author.bookList}">
+                        <span th:text="${book.title}"></span>
+                    </p>
                 </div>
                 <div class="card-footer">
-                    <a href="#" class="btn btn-outline-light">Megtekint</a>
+                    <a href="#" th:href="@{/authorstobooks(id=${author.id})}" class="btn btn-outline-light">Megtekint</a>
                 </div>
             </div>
         </div>
     </div>
+    <div class="row m-1 d-flex justify-content-center">
+        <div class="pagination mr-1">
+            <a th:href="@{/allbook(page=0)}" class="btn btn-outline-dark"
+               data-toggle="tooltip" data-placement="top" title="Első"><<</a>
+        </div>
+        <div th:if="${authorPagination.totalPages >= 0}" class="pagination"
+             th:each="pageNumber : ${pageNumbers}">
+            <a th:href="@{/allbook(page=${pageNumbers}-1)}" class="btn btn-outline-dark"
+               th:text="${pageNumbers}-1"></a>
+        </div>
+        <div class="pagination ml-1">
+            <a th:href="@{/allbook(page=${authorPagination.totalPages}-1)}" class="btn btn-outline-dark"
+               data-toggle="tooltip" data-placement="top" title="Utolsó">>></a>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid d-flex justify-content-center align-items-center"
+     style="min-height: 10vh; background-color: #285756">
+    <a class="btn btn-outline-light" href="#" th:href="@{addauthor}">Új szerző hozzáadása</a>
 </div>
 
 <div class="container-fluid" style="min-height: 90vh">
-    <div class="m-5" >
+    <div class="m-5">
         <table class="table table-striped text-light" style="background-color: #293C5B !important;">
             <thead>
             <tr>
@@ -69,28 +96,18 @@
     </div>
 </div>
 
-<!--<table>-->
-<!--    <thead>-->
-<!--    <tr>-->
-<!--        <th>szerző neve</th>-->
-<!--        <th>skönyve(i)</th>-->
-<!--    </tr>-->
-<!--    </thead>-->
-<!--    <tbody>-->
-<!--    <tr th:if="${authors.empty}">-->
-<!--        <td> nincsenek szerzők</td>-->
-<!--    </tr>-->
-<!--    <tr th:each="author : ${authors}">-->
-<!--        <td><span th:text="${author.firstName} +'  '+ ${author.lastName}"></span></td>-->
-<!--        <td><span th:text="${author.title}"></span></td>-->
-<!--    </tr>-->
-<!--    </tbody>-->
-<!--</table>-->
-
 <div class="container-fluid d-flex justify-content-center align-items-center"
      style="min-height: 10vh; background-color: #F39A00">
     <a class="btn btn-outline-dark" href="#" th:href="@{addbook}">Új könyv hozzáadása</a>
 </div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+    /*]]>*/
+</script>
 
 <script th:src="@{/webjars/jquery/3.3.1-2/jquery.slim.js}"></script>
 <script th:src="@{/webjars/bootstrap/4.6.0/js/bootstrap.bundle.min.js}"></script>

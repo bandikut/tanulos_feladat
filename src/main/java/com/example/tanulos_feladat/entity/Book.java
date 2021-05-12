@@ -19,7 +19,12 @@ import java.util.Set;
 )
 public class Book {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(
+            name = "book_seq",
+            sequenceName = "bo_seq",
+            allocationSize = 1
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bo_seq")
     @Column(name = "id")
     private Long id;
 
@@ -42,7 +47,7 @@ public class Book {
     )
     private Set<Author> authorList = new HashSet<>();
 
-    public Book(Long id,String title, String isbn, boolean isAvailable, int numberOfPages) {
+    public Book(Long id, String title, String isbn, boolean isAvailable, int numberOfPages) {
         this.id = id;
         this.title = title;
         this.isbn = isbn;

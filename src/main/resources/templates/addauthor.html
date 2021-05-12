@@ -14,26 +14,16 @@
 
 <div class="container-fluid d-flex justify-content-center align-items-center"
      style="min-height: 100vh; background-color: #F39A00">
-    <form th:action="@{/saveBook}" class="w-50" method="post" th:object="${nbook}" style="color: #285756 !important;">
+    <form th:action="@{/saveAuthor}" class="w-50" method="post" th:object="${nauthor}"
+          style="color: #285756 !important;">
         <div class="form-row">
             <div class="form-group col-md-6">
-                <label for="title" class="display-4">Cím</label>
-                <input th:field="*{title}" type="text" class="form-control" id="title">
+                <label for="fname" class="display-4">Keresztnév</label>
+                <input th:field="*{firstName}" type="text" class="form-control" id="fname">
             </div>
             <div class="form-group col-md-6">
-                <label for="pNum" class="display-4">Oldalszám</label>
-                <input th:field="*{numberOfPages}" type="number" class="form-control" id="pNum">
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="isbn" class="display-4">ISBN</label>
-                <input th:field="*{isbn}" type="text" class="form-control" id="isbn" maxlength="13"
-                       minlength="1">
-            </div>
-            <div class="form-group col-md-6">
-                <label for="pNum" class="display-4">Megvan?</label>
-                <input th:field="*{isAvailable}" type="checkbox" class="form-control form-check-input" id="isAvailable">
+                <label for="lname" class="display-4">Családnév</label>
+                <input th:field="*{lastName}" type="text" class="form-control" id="lname">
             </div>
         </div>
         <div class="form-row d-flex justify-content-sm-center mt-2 mb-4">

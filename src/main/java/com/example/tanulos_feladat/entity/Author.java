@@ -16,7 +16,12 @@ import java.util.Set;
 public class Author {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(
+          name = "author_seq",
+          sequenceName = "au_seq",
+          allocationSize = 1
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "au_seq")
     @Column(name = "id", updatable = false)
     private long id;
 
@@ -29,22 +34,9 @@ public class Author {
     @ManyToMany(mappedBy = "authorList", fetch = FetchType.LAZY)
     private Set<Book> booksList = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "book_id", foreignKey = @ForeignKey(name = "fk_book_author"))
-    private Book book;
-
-
     public Author(String authorFirstName, String authorLastName) {
         this.authorFirstName = authorFirstName;
         this.authorLastName = authorLastName;
     }
 
-
-//    public void addBook(Book book) {
-//        this.books.add(book);
-//    }
-//
-//    public void removeBook(Book book) {
-//        this.books.remove(book);
-//    }
 }
