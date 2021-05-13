@@ -9,8 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AuthorRepository extends JpaRepository<Author, Long>  {
+public interface AuthorRepository extends JpaRepository<Author, Long> {
 
     List<Author> findByAuthorFirstNameContainingIgnoreCase(String text1);
-    List<Author> findByAuthorFirstNameContainsOrAuthorLastNameContains(String text1,String text2);
 }

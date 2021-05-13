@@ -15,10 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,26 +63,19 @@ public class MapService {
         authorRepository.save(author);
     }
 
+    @Transactional
     public void removeAuthor(Long id) {
         authorRepository.deleteById(id);
     }
 
-        public AuthorDTO findAuthorById(Long id) {
+    public AuthorDTO findAuthorById(Long id) {
         AuthorDTO author;
-        if (authorRepository.findById(id).isPresent()){
+        if (authorRepository.findById(id).isPresent()) {
             author = convertAuthorsDTO(authorRepository.findById(id).get());
         } else {
             author = null;
         }
-        return  author;
-    }
-
-  
-
-    public List<AuthorDTO> findInWholeName(String text1, String tex2) {
-        return ((List<Author>) authorRepository.findByAuthorFirstNameContainsOrAuthorLastNameContains(text1, tex2))
-                .stream().map(this::convertAuthorsDTO)
-                .collect(Collectors.toList());
+        return author;
     }
 
     public List<AuthorDTO> findAuthorsByFirstname(String text) {
@@ -96,13 +86,13 @@ public class MapService {
 
     public Page<AuthorDTO> pagination(int index) {
         int pageSize = 8;
-        int startItemIndex = index*pageSize;
+        int startItemIndex = index * pageSize;
         List<AuthorDTO> tempList;
 
         if (authorsListSize() < startItemIndex) {
             tempList = Collections.emptyList();
         } else {
-            int toIndex  = Math.min(startItemIndex + pageSize,authorsListSize());
+            int toIndex = Math.min(startItemIndex + pageSize, authorsListSize());
             tempList = getAllAuthors().subList(startItemIndex, toIndex);
             tempList.sort(Comparator.comparing(AuthorDTO::getFirstName));
         }
@@ -110,6 +100,7 @@ public class MapService {
         return onePage;
     }
 
+    @Transactional
     public void deleteAuthor(Long id) {
         authorRepository.deleteById(id);
     }
@@ -126,32 +117,54 @@ public class MapService {
     public List<BookDTO> getAllBooks() {
         return ((List<Book>) bookRepository.findAll())
                 .stream()
-                .map(obj -> modelMapper.map(obj, BookDTO.class))
+                .map(this::convertBooksDTO)
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void addBook(BookDTO bookDTO) {
         Book book = new ModelMapper().map(bookDTO, Book.class);
         bookRepository.save(book);
     }
 
-
+    @Transactional
     public void updateAuthor(AuthorDTO authorDTO) {
-        modelMapper.getConfiguration()
-                .setMatchingStrategy(MatchingStrategies.LOOSE);
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         Author author = modelMapper.map(authorDTO, Author.class);
-        System.out.println("+-+-+-+-+-+author dto" + authorDTO);
-        System.out.println("+-+-+-+-+-+author entity" + author);
 
-        if ( authorRepository.findById(authorDTO.getId()).isPresent()){
-           Author updateAuthor = authorRepository.findById(authorDTO.getId()).get();
+        if (authorRepository.findById(authorDTO.getId()).isPresent()) {
+            Author updateAuthor = authorRepository.findById(authorDTO.getId()).get();
             updateAuthor.setAuthorFirstName(author.getAuthorFirstName());
             updateAuthor.setAuthorLastName(author.getAuthorLastName());
+            System.out.println("+++++ toupdate" + author.getBooksList());
+            updateAuthor.setBooksList(author.getBooksList());
             Author savedAuthor = authorRepository.save(updateAuthor);
-            if (authorRepository.findById(savedAuthor.getId()).isPresent()){
+            if (authorRepository.findById(savedAuthor.getId()).isPresent()) {
                 System.out.println("sikeres mentés");
             }
         }
 
+    }
+
+    public BookDTO findBookById(Long id) {
+        BookDTO book;
+        if (bookRepository.findById(id).isPresent()) {
+            book = convertBooksDTO(bookRepository.findById(id).get());
+        } else {
+            book = null;
+        }
+        return book;
+    }
+
+
+    public void saveAuthor() {
+        Author orkeny = new Author();
+        orkeny.setId(113);
+        orkeny.setAuthorFirstName("István");
+        orkeny.setAuthorLastName("Örkény");
+        Set<Book> bl = new HashSet<>();
+        bl.add(bookRepository.findById(3L).get());
+        orkeny.setBooksList(bl);
+        authorRepository.save(orkeny);
     }
 }
