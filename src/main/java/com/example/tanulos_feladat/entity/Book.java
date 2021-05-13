@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -40,27 +40,14 @@ public class Book {
     @Column(name = "number_of_pages")
     private int numberOfPages;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Author.class,
+            cascade = CascadeType.MERGE)
     @JoinTable(name = "book_author",
-            joinColumns = @JoinColumn(name = "book_id", foreignKey = @ForeignKey(name = "fk_author_id")),
-            inverseJoinColumns = @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_book_id"))
+            joinColumns = @JoinColumn(name = "book_id",
+                    foreignKey = @ForeignKey(name = "fk_author_id")),
+            inverseJoinColumns = @JoinColumn(name = "author_id",
+                    foreignKey = @ForeignKey(name = "fk_book_id"))
     )
     private Set<Author> authorList = new HashSet<>();
 
-    public Book(Long id, String title, String isbn, boolean isAvailable, int numberOfPages) {
-        this.id = id;
-        this.title = title;
-        this.isbn = isbn;
-        this.isAvailable = isAvailable;
-        this.numberOfPages = numberOfPages;
-    }
-
-
-//    public void addAuthor(Author author) {
-//        this.authors.add(author);
-//    }
-//
-//    public void removeAuthor(Author author) {
-//        this.authors.remove(author);
-//    }
 }

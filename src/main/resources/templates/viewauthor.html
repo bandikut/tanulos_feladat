@@ -22,7 +22,7 @@
         </form>
     </div>
     <div>
-        <form th:action="@{/authorstobooks/update(id=${author.id})}" class="" method="post" th:object="${author}"
+        <form th:action="@{/viewauthor/update(id=${author.id})}" class="" method="post" th:object="${author}"
               style="color: #285756 !important;">
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -48,16 +48,30 @@
             </div>
             <div class="form-row d-flex justify-content-sm-center mt-2 mb-4">
                 <input type="submit" class="btn  btn-success btn-block mt-2 mb-2" value="mentés"/>
-                <input type="reset" class="btn  btn-danger m-2" value="kiürít"/>
                 <a th:href="@{/allbook}" class="btn btn-dark m-2">vissza az összeshez</a>
             </div>
         </form>
+
+        <div>
+            <div class="form-row d-flex justify-content-sm-center mt-2 mb-4">
+                <select class="custom-select" th:field="*{books}">
+                    <option th:each="b : ${books}"
+                            th:value="${b.title}"
+                            th:text="${b.title}">cím
+                    </option>
+                </select>
+            </div>
+            <div class="form-row d-flex justify-content-sm-center mt-2 mb-4">
+                <button class="btn btn-primary" type="submit" name="addRow">+ könyv</button>
+            </div>
+        </div>
     </div>
 </div>
 
 <script th:src="@{/webjars/jquery/3.3.1-2/jquery.slim.js}"></script>
 <script th:src="@{/webjars/bootstrap/4.6.0/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/webjars/popper.js/2.5.4/umd/popper.min.js}"></script>
+
 </body>
 
 </html>

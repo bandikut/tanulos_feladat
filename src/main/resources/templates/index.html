@@ -19,8 +19,6 @@
     </div>
 </div>
 
-<!--<th:block th:insert="fragments/authors"/>-->
-
 <div class="container-fluid" style="min-height: 70vh">
     <div class="row m-5">
         <div class="col-4 col-sm-6 col-md-6 col-lg-3" th:each="author : ${authorPagination}">
@@ -39,7 +37,8 @@
                     </p>
                 </div>
                 <div class="card-footer">
-                    <a href="#" th:href="@{/authorstobooks(id=${author.id})}" class="btn btn-outline-light">Megtekint</a>
+                    <a href="#" th:href="@{/viewauthor(id=${author.id})}"
+                       class="btn btn-outline-light">Megtekint</a>
                 </div>
             </div>
         </div>
@@ -49,10 +48,10 @@
             <a th:href="@{/allbook(page=0)}" class="btn btn-outline-dark"
                data-toggle="tooltip" data-placement="top" title="Első"><<</a>
         </div>
-        <div th:if="${authorPagination.totalPages >= 0}" class="pagination"
+        <div th:if="${authorPagination.totalPages > 0}" class="pagination"
              th:each="pageNumber : ${pageNumbers}">
-            <a th:href="@{/allbook(page=${pageNumbers}-1)}" class="btn btn-outline-dark"
-               th:text="${pageNumbers}-1"></a>
+            <a th:href="@{/allbook(page=${pageNumber}-1)}" class="btn btn-outline-dark"
+               th:text="${pageNumber}"></a>
         </div>
         <div class="pagination ml-1">
             <a th:href="@{/allbook(page=${authorPagination.totalPages}-1)}" class="btn btn-outline-dark"
@@ -66,7 +65,7 @@
     <a class="btn btn-outline-light" href="#" th:href="@{addauthor}">Új szerző hozzáadása</a>
 </div>
 
-<div class="container-fluid" style="min-height: 90vh">
+<div class="container-fluid" style="min-height: 70vh">
     <div class="m-5">
         <table class="table table-striped text-light" style="background-color: #293C5B !important;">
             <thead>
@@ -77,6 +76,7 @@
                 <th> megvan?</th>
                 <th> ISBN</th>
                 <th> id</th>
+                <th> Megtekint</th>
             </tr>
             </thead>
             <tbody>
@@ -87,9 +87,10 @@
                 <td><span th:text="${book.title}"> cím </span></td>
                 <!--        <td><span th:text="${book.authors}"> szerző(k) </span></td>-->
                 <td><span th:text="${book.numberOfPages}"> oldalak száma </span></td>
-                <td><span th:text="${book.isAvailable}"> megvan? </span></td>
+                <td><span th:text="${book.isAvailable} ? 'megvan' : 'nincs meg'"> megvan? </span></td>
                 <td><span th:text="${book.isbn}"> ISBN </span></td>
                 <td><span th:text="${book.id}"> id </span></td>
+                <td><a th:href="@{/viewbook(id=${book.id})}" class="btn btn-sm text-light" >megtekint</a></td>
             </tr>
             </tbody>
         </table>

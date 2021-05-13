@@ -11,5 +11,4 @@ public class AuthorDTO {
     private String firstName;
     private String lastName;
     private Set<BookDTO> bookList = new HashSet<>();
-
 }

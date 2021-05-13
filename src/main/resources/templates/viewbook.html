@@ -15,7 +15,7 @@
 <div class="container-fluid d-flex justify-content-center align-items-center flex-column"
      style="min-height: 100vh; background-color: #F39A00">
     <div class="col-md-6">
-        <form th:action="@{/saveBook}" class="" method="post" th:object="${nbook}"
+        <form th:action="@{/saveBook}" class="" method="post" th:object="${book}"
               style="color: #285756 !important;">
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -40,42 +40,24 @@
                 </div>
             </div>
             <div class="form-row d-flex justify-content-sm-center mt-2 mb-4">
-                <input type="submit" class="btn  btn-success btn-block mt-2 mb-2" value="mentés"/>
-                <input type="reset" class="btn  btn-danger m-2" value="kiürít"/>
+                <input type="submit" class="btn  btn-success btn-block mt-2 mb-2 disabled" value="mentés" disabled/>
+                <input type="reset" class="btn  btn-danger m-2 disabled" value="kiürít" disabled/>
                 <a th:href="@{allbook}" class="btn btn-dark m-2">vissza az összeshez</a>
             </div>
         </form>
     </div>
-
-    <div class="col-md-6">
-        <form>
-            <div class="form-row">
-                <div class="form-group col-md-12">
-                    <label for="searchValue" class="display-4 " style="color: #285756 !important;">Keresés a könyv
-                        címére a moly.hu-n</label>
-                    <input type="text" class="form-control" id="searchValue">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-12">
-                    <button onclick="getBookFromMolyApi()" class="form-control btn btn-success" id="goSearch">Keresés</button>
-                </div>
-            </div>
-        </form>
-    </div>
-
 </div>
 
 
 <script th:inline="javascript">
     /*<![CDATA[*/
-    const getBookFromMolyApi = async () => {
-        const toSearch = document.getElementById('searchValue').value;
-        console.debug("toSearch", toSearch);
-        const response = await fetch('https://moly.hu/api/books.json?q=hyperion&key=3a32342d336e489ddfb82fde4a971f43')
-        const bookList = await response.json();
-        console.debug("bookList", bookList);
-    }
+    // const getBookFromMolyApi = async () => {
+    //     const toSearch = document.getElementById('searchValue').value;
+    //     console.debug("toSearch", toSearch);
+    //     const response = await fetch('https://moly.hu/api/books.json?q=hyperion&key=3a32342d336e489ddfb82fde4a971f43')
+    //     const bookList = await response.json();
+    //     console.debug("bookList", bookList);
+    // }
     /*]]>*/
 </script>
 <script th:src="@{/webjars/jquery/3.3.1-2/jquery.slim.js}"></script>
