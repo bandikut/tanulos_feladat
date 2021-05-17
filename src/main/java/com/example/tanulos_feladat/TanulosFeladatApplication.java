@@ -44,4 +44,6 @@ public class TanulosFeladatApplication {
         };
     }
 
+    //be kell kapcsolni a tranzakciókezelést
+
 }

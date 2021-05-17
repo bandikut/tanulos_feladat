@@ -12,4 +12,6 @@ import java.util.List;
 public interface AuthorRepository extends JpaRepository<Author, Long> {
 
     List<Author> findByAuthorFirstNameContainingIgnoreCase(String text1);
+
+    //todo custom query-s countot megírni
 }

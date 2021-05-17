@@ -1,38 +1,26 @@
 package com.example.tanulos_feladat.entity;
 
-import lombok.*;
+import lombok.Data;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString
 
-@Entity(name = "Author")
-@Table(name = "author")
+@Data
+@Entity
 public class Author {
 
     @Id
-    @SequenceGenerator(
-            name = "author_seq",
-            sequenceName = "au_seq",
-            allocationSize = 1
-    )
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "au_seq")
-    @Column(name = "id", updatable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "author_first_name", nullable = false, columnDefinition = "VARCHAR(150)")
+    @Column(nullable = false)
     private String authorFirstName;
 
-    @Column(name = "author_last_name", nullable = false, columnDefinition = "VARCHAR(150)")
+    @Column(nullable = false)
     private String authorLastName;
 
-    @ManyToMany(mappedBy = "authorList", fetch = FetchType.EAGER, targetEntity = Book.class, cascade = CascadeType.MERGE)
-    private Set<Book> booksList = new HashSet<>();
-
-
+    @ManyToMany(mappedBy = "authorList")
+    private List<Book> bookList = new ArrayList<>();
 }

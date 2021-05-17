@@ -2,7 +2,7 @@ package com.example.tanulos_feladat.controller;
 
 import com.example.tanulos_feladat.dto.AuthorDTO;
 import com.example.tanulos_feladat.dto.BookDTO;
-import com.example.tanulos_feladat.service.MapService;
+import com.example.tanulos_feladat.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -22,13 +21,13 @@ import java.util.stream.IntStream;
 public class IndexPageController {
 
     @Autowired
-    private MapService mapService;
+    private AuthorService authorService;
 
     @RequestMapping(value = {"/", "/allbook**"}, method = RequestMethod.GET)
     public String indexPage(
             Model model,
             @RequestParam("page") Optional<Integer> pageIndex) {
-        List<AuthorDTO> authors = mapService.getAllAuthors();
+        List<AuthorDTO> authors = authorService.getAllAuthors();
         model.addAttribute("authors", authors);
 
         authors.stream().forEach(i -> {
@@ -55,10 +54,10 @@ public class IndexPageController {
 //        System.out.println("authors" + authors);
 
 
-        mapService.saveAuthor();
+        authorService.saveAuthor();
 
         int currentPage = pageIndex.orElse(0);
-        Page<AuthorDTO> authorPagination = mapService.pagination(currentPage);
+        Page<AuthorDTO> authorPagination = authorService.pagination(currentPage);
         model.addAttribute("authorPagination", authorPagination);
         int totalPages = authorPagination.getTotalPages();
         List<Integer> pageNumbers = new ArrayList<>();
@@ -69,7 +68,7 @@ public class IndexPageController {
         }
         model.addAttribute("pageNumbers", pageNumbers);
 
-        List<BookDTO> books = mapService.getAllBooks();
+        List<BookDTO> books = authorService.getAllBooks();
         model.addAttribute("books", books);
 
         return "index";

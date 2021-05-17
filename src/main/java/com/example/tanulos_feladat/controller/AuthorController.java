@@ -2,8 +2,7 @@ package com.example.tanulos_feladat.controller;
 
 import com.example.tanulos_feladat.dto.AuthorDTO;
 import com.example.tanulos_feladat.dto.BookDTO;
-import com.example.tanulos_feladat.service.MapService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.tanulos_feladat.service.AuthorService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +12,12 @@ import java.util.List;
 @Controller
 public class AuthorController {
 
-    @Autowired
-    private MapService mapService;
+
+    private AuthorService authorService;
+
+    public AuthorController(AuthorService authorService) {
+        this.authorService = authorService;
+    }
 
     @GetMapping(value = "/addauthor")
     public String newAuthor(Model model) {
@@ -23,32 +26,32 @@ public class AuthorController {
     }
 
     @PostMapping(value = "/saveAuthor")
-    public String saveAuthor(@ModelAttribute AuthorDTO form, Model model) throws Exception {
-        mapService.addAuthor(form);
+    public String saveAuthor(@ModelAttribute AuthorDTO form)  {
+        authorService.addAuthor(form);
         return "redirect:/addauthor";
     }
 
-    @RequestMapping(value = "/viewauthor{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/viewauthor")
     public String authorsBooks(Model model,
                                @RequestParam("id") Long id) {
-        AuthorDTO authorDTO = mapService.findAuthorById(id);
+        AuthorDTO authorDTO = authorService.findAuthorById(id);
         model.addAttribute("author", authorDTO);
-        List<BookDTO> books = mapService.getAllBooks();
+        List<BookDTO> books = authorService.getAllBooks();
         model.addAttribute("books", books);
         return "viewauthor";
     }
 
-    @PostMapping(value = "/{deleteauthor}")
-    public String deleteAuthor(@RequestParam("deleteauthor") Long id) {
-        mapService.deleteAuthor(id);
+    @GetMapping(value = "/deleteauthor")
+    public String deleteAuthor(@RequestParam("id") Long id) {
+        authorService.deleteAuthor(id);
         System.out.println("id :" + id);
         return "redirect:/allbook";
     }
 
 
-    @RequestMapping(value = "/viewauthor/update{id}", method = RequestMethod.POST)
+    @PostMapping(value = "/viewauthor/update{id}")
     public String updateAuthor(@ModelAttribute AuthorDTO form) {
-        mapService.updateAuthor(form);
+        authorService.updateAuthor(form);
         return "redirect:/allbook";
     }
 }

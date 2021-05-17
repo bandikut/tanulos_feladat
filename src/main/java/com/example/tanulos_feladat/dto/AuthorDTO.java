@@ -10,5 +10,6 @@ public class AuthorDTO {
     private Long id;
     private String firstName;
     private String lastName;
+    //TODO: Listté kell alakítani
     private Set<BookDTO> bookList = new HashSet<>();
 }

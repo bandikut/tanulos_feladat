@@ -18,8 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+//TODO service impl
+
+@Transactional
 @Service
-public class MapService {
+public class AuthorService {
+    //TODO ne legyen autowired
+    //irm-ben a rendszerparaméterezőben, külön mapper rétegek
+    //szétszedni a serviceket
+
     @Autowired
     AuthorRepository authorRepository;
 
@@ -39,47 +46,40 @@ public class MapService {
 //        return authorDTO;
 //    }
 
+    //mapstructort is lehet használni
     private AuthorDTO convertAuthorsDTO(Author author) {
-        modelMapper.getConfiguration()
-                .setMatchingStrategy(MatchingStrategies.LOOSE);
-        AuthorDTO authorDTO = modelMapper
-                .map(author, AuthorDTO.class);
-        return authorDTO;
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+        return modelMapper.map(author, AuthorDTO.class);
     }
 
     public List<AuthorDTO> getAllAuthors() {
-        return ((List<Author>) authorRepository.findAll())
+        return authorRepository.findAll()
                 .stream().map(this::convertAuthorsDTO)
                 .collect(Collectors.toList());
     }
 
+    //TODO custom queryből a repóból
     private Integer authorsListSize() {
         return getAllAuthors().size();
     }
 
-    @Transactional
     public void addAuthor(AuthorDTO authorDTO) {
-        Author author = new ModelMapper().map(authorDTO, Author.class);
+        var author = new ModelMapper().map(authorDTO, Author.class);
         authorRepository.save(author);
     }
 
-    @Transactional
+
     public void removeAuthor(Long id) {
         authorRepository.deleteById(id);
     }
 
     public AuthorDTO findAuthorById(Long id) {
-        AuthorDTO author;
-        if (authorRepository.findById(id).isPresent()) {
-            author = convertAuthorsDTO(authorRepository.findById(id).get());
-        } else {
-            author = null;
-        }
-        return author;
+        //getone lehibakezeli, ha nincs ilyen id
+        return convertAuthorsDTO(authorRepository.getOne(id));
     }
 
     public List<AuthorDTO> findAuthorsByFirstname(String text) {
-        return ((List<Author>) authorRepository.findByAuthorFirstNameContainingIgnoreCase(text))
+        return authorRepository.findByAuthorFirstNameContainingIgnoreCase(text)
                 .stream().map(this::convertAuthorsDTO)
                 .collect(Collectors.toList());
     }
@@ -96,11 +96,10 @@ public class MapService {
             tempList = getAllAuthors().subList(startItemIndex, toIndex);
             tempList.sort(Comparator.comparing(AuthorDTO::getFirstName));
         }
-        Page<AuthorDTO> onePage = new PageImpl<AuthorDTO>(tempList, PageRequest.of(index, pageSize), authorsListSize());
-        return onePage;
+        return new PageImpl<AuthorDTO>(tempList, PageRequest.of(index, pageSize), authorsListSize());
+        //TODO pageable-t leszedni repository-ból
     }
 
-    @Transactional
     public void deleteAuthor(Long id) {
         authorRepository.deleteById(id);
     }
@@ -121,33 +120,36 @@ public class MapService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+
     public void addBook(BookDTO bookDTO) {
         Book book = new ModelMapper().map(bookDTO, Book.class);
+        //addbook adja vissza a long id-t saveAndFlush-t +nézni, tranzakciókezelés
         bookRepository.save(book);
     }
 
-    @Transactional
+
     public void updateAuthor(AuthorDTO authorDTO) {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         Author author = modelMapper.map(authorDTO, Author.class);
 
+        //TODO ismétlés ne legyen
         if (authorRepository.findById(authorDTO.getId()).isPresent()) {
             Author updateAuthor = authorRepository.findById(authorDTO.getId()).get();
             updateAuthor.setAuthorFirstName(author.getAuthorFirstName());
             updateAuthor.setAuthorLastName(author.getAuthorLastName());
-            System.out.println("+++++ toupdate" + author.getBooksList());
-            updateAuthor.setBooksList(author.getBooksList());
-            Author savedAuthor = authorRepository.save(updateAuthor);
-            if (authorRepository.findById(savedAuthor.getId()).isPresent()) {
-                System.out.println("sikeres mentés");
-            }
+            System.out.println("+++++ toupdate" + author.getBookList());
+            updateAuthor.setBookList(author.getBookList());
+            Author savedAuthor = authorRepository.saveAndFlush(updateAuthor);
+//            if (authorRepository.findById(savedAuthor.getId()).isPresent()) {
+//                System.out.println("sikeres mentés");
+//            }
         }
 
     }
 
     public BookDTO findBookById(Long id) {
         BookDTO book;
+        //todo megoldani
         if (bookRepository.findById(id).isPresent()) {
             book = convertBooksDTO(bookRepository.findById(id).get());
         } else {
@@ -157,14 +159,24 @@ public class MapService {
     }
 
 
+    //todo ezt innen megszüntenti
+    //todo átírni külön a serviceket implementationokre
+
     public void saveAuthor() {
         Author orkeny = new Author();
-        orkeny.setId(113);
+        orkeny.setId(114);
         orkeny.setAuthorFirstName("István");
         orkeny.setAuthorLastName("Örkény");
-        Set<Book> bl = new HashSet<>();
-        bl.add(bookRepository.findById(3L).get());
-        orkeny.setBooksList(bl);
+        Book b = new Book();
+        b.setNumberOfPages(200);
+        b.setIsbn("hsaihsiu");
+        b.setAvailable(true);
+        b.setTitle("macska");
+        b.setId(1l);
+        bookRepository.save(b);
+        orkeny.getBookList().add(b);
+        System.out.println("b" + b);
         authorRepository.save(orkeny);
+        System.out.println("orkeny" + orkeny);
     }
 }
