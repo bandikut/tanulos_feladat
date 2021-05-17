@@ -1,9 +1,8 @@
 package com.example.tanulos_feladat.controller;
 
-import com.example.tanulos_feladat.dto.AuthorDTO;
 import com.example.tanulos_feladat.dto.BookDTO;
-import com.example.tanulos_feladat.service.AuthorService;
-import com.example.tanulos_feladat.service.BookService;
+import com.example.tanulos_feladat.service.AuthorServiceImpl;
+import com.example.tanulos_feladat.service.BookServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,18 +10,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
 @Controller
 public class BookController {
 
-    private AuthorService authorService;
-    private BookService bookService;
+    private AuthorServiceImpl authorService;
+    private BookServiceImpl bookService;
 
-    public BookController(AuthorService authorService, BookService bookService) {
+    public BookController(AuthorServiceImpl authorService, BookServiceImpl bookService) {
         this.authorService = authorService;
         this.bookService = bookService;
     }
+
 
     @GetMapping(value = "/addbook")
     public String newBook(Model model) {
@@ -42,7 +40,7 @@ public class BookController {
         BookDTO bookDTO = bookService.findBookById(id);
         model.addAttribute("book", bookDTO);
 
-        List<AuthorDTO> authorDTO = authorService.getAllAuthors();
+//        List<AuthorDTO> authorDTO = authorService.getAllAuthors();
         return "viewbook";
     }
 

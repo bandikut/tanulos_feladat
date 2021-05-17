@@ -3,7 +3,7 @@ package com.example.tanulos_feladat.controller;
 import com.example.tanulos_feladat.dto.AuthorDTO;
 import com.example.tanulos_feladat.dto.BookDTO;
 import com.example.tanulos_feladat.service.AuthorService;
-import com.example.tanulos_feladat.service.BookService;
+import com.example.tanulos_feladat.service.BookServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +16,10 @@ import java.util.List;
 @Controller
 public class AuthorController {
 
-    private BookService bookService;
+    private BookServiceImpl bookService;
     private AuthorService authorService;
 
-    public AuthorController(BookService bookService, AuthorService authorService) {
+    public AuthorController(BookServiceImpl bookService, AuthorService authorService) {
         this.bookService = bookService;
         this.authorService = authorService;
     }

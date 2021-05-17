@@ -3,7 +3,8 @@ package com.example.tanulos_feladat.controller;
 import com.example.tanulos_feladat.dto.AuthorDTO;
 import com.example.tanulos_feladat.dto.BookDTO;
 import com.example.tanulos_feladat.service.AuthorService;
-import com.example.tanulos_feladat.service.BookService;
+import com.example.tanulos_feladat.service.AuthorServiceImpl;
+import com.example.tanulos_feladat.service.BookServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,10 +20,10 @@ import java.util.stream.IntStream;
 @Controller
 public class IndexPageController {
 
-    private AuthorService authorService;
-    private BookService bookService;
+    private AuthorServiceImpl authorService;
+    private BookServiceImpl bookService;
 
-    public IndexPageController(AuthorService authorService, BookService bookService) {
+    public IndexPageController(AuthorServiceImpl authorService, BookServiceImpl bookService) {
         this.authorService = authorService;
         this.bookService = bookService;
     }
