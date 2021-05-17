@@ -4,7 +4,6 @@ import com.example.tanulos_feladat.dto.AuthorDTO;
 import com.example.tanulos_feladat.dto.BookDTO;
 import com.example.tanulos_feladat.service.AuthorService;
 import com.example.tanulos_feladat.service.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +13,13 @@ import java.util.List;
 @Controller
 public class BookController {
 
-    @Autowired
     private AuthorService authorService;
-    @Autowired
     private BookService bookService;
+
+    public BookController(AuthorService authorService, BookService bookService) {
+        this.authorService = authorService;
+        this.bookService = bookService;
+    }
 
     @GetMapping(value = "/addbook")
     public String newBook(Model model) {

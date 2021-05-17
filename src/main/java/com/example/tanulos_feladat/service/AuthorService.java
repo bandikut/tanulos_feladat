@@ -1,21 +1,21 @@
 package com.example.tanulos_feladat.service;
 
 import com.example.tanulos_feladat.dto.AuthorDTO;
-import com.example.tanulos_feladat.dto.BookDTO;
 import com.example.tanulos_feladat.entity.Author;
 import com.example.tanulos_feladat.entity.Book;
 import com.example.tanulos_feladat.repository.AuthorRepository;
 import com.example.tanulos_feladat.repository.BookRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 //TODO service impl
@@ -27,14 +27,16 @@ public class AuthorService {
     //irm-ben a rendszerparaméterezőben, külön mapper rétegek
     //szétszedni a serviceket
 
-    @Autowired
     AuthorRepository authorRepository;
-
-    @Autowired
     BookRepository bookRepository;
 
-    @Autowired
     ModelMapper modelMapper;
+
+    public AuthorService(AuthorRepository authorRepository, BookRepository bookRepository, ModelMapper modelMapper) {
+        this.authorRepository = authorRepository;
+        this.bookRepository = bookRepository;
+        this.modelMapper = modelMapper;
+    }
 
     //mapstructort is lehet használni
     private AuthorDTO convertAuthorsDTO(Author author) {

@@ -4,7 +4,6 @@ import com.example.tanulos_feladat.dto.AuthorDTO;
 import com.example.tanulos_feladat.dto.BookDTO;
 import com.example.tanulos_feladat.service.AuthorService;
 import com.example.tanulos_feladat.service.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,11 +20,13 @@ import java.util.stream.IntStream;
 @Controller
 public class IndexPageController {
 
-    @Autowired
     private AuthorService authorService;
-
-    @Autowired
     private BookService bookService;
+
+    public IndexPageController(AuthorService authorService, BookService bookService) {
+        this.authorService = authorService;
+        this.bookService = bookService;
+    }
 
     @RequestMapping(value = {"/", "/allbook**"}, method = RequestMethod.GET)
     public String indexPage(

@@ -4,25 +4,26 @@ import com.example.tanulos_feladat.dto.AuthorDTO;
 import com.example.tanulos_feladat.dto.BookDTO;
 import com.example.tanulos_feladat.service.AuthorService;
 import com.example.tanulos_feladat.service.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
 @Controller
 public class AuthorController {
 
-
+    private BookService bookService;
     private AuthorService authorService;
 
-    public AuthorController(AuthorService authorService) {
+    public AuthorController(BookService bookService, AuthorService authorService) {
+        this.bookService = bookService;
         this.authorService = authorService;
     }
 
-    @Autowired
-    private BookService bookService;
 
     @GetMapping(value = "/addauthor")
     public String newAuthor(Model model) {
@@ -31,7 +32,7 @@ public class AuthorController {
     }
 
     @PostMapping(value = "/saveAuthor")
-    public String saveAuthor(@ModelAttribute AuthorDTO form)  {
+    public String saveAuthor(@ModelAttribute AuthorDTO form) {
         authorService.addAuthor(form);
         return "redirect:/addauthor";
     }
@@ -39,7 +40,7 @@ public class AuthorController {
     @GetMapping(value = "/viewauthor")
     public String authorsBooks(Model model,
                                @RequestParam("id") Long id) {
-        AuthorDTO authorDTO = authorService.findAuthorById(id);
+        var authorDTO = authorService.findAuthorById(id);
         model.addAttribute("author", authorDTO);
         List<BookDTO> books = bookService.getAllBooks();
         model.addAttribute("books", books);
