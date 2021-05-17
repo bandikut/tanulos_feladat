@@ -3,6 +3,8 @@ package com.example.tanulos_feladat.controller;
 import com.example.tanulos_feladat.dto.AuthorDTO;
 import com.example.tanulos_feladat.dto.BookDTO;
 import com.example.tanulos_feladat.service.AuthorService;
+import com.example.tanulos_feladat.service.BookService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,9 @@ public class AuthorController {
     public AuthorController(AuthorService authorService) {
         this.authorService = authorService;
     }
+
+    @Autowired
+    private BookService bookService;
 
     @GetMapping(value = "/addauthor")
     public String newAuthor(Model model) {
@@ -36,7 +41,7 @@ public class AuthorController {
                                @RequestParam("id") Long id) {
         AuthorDTO authorDTO = authorService.findAuthorById(id);
         model.addAttribute("author", authorDTO);
-        List<BookDTO> books = authorService.getAllBooks();
+        List<BookDTO> books = bookService.getAllBooks();
         model.addAttribute("books", books);
         return "viewauthor";
     }

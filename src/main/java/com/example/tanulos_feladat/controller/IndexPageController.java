@@ -3,6 +3,7 @@ package com.example.tanulos_feladat.controller;
 import com.example.tanulos_feladat.dto.AuthorDTO;
 import com.example.tanulos_feladat.dto.BookDTO;
 import com.example.tanulos_feladat.service.AuthorService;
+import com.example.tanulos_feladat.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,9 @@ public class IndexPageController {
     @Autowired
     private AuthorService authorService;
 
+    @Autowired
+    private BookService bookService;
+
     @RequestMapping(value = {"/", "/allbook**"}, method = RequestMethod.GET)
     public String indexPage(
             Model model,
@@ -36,22 +40,7 @@ public class IndexPageController {
             i.getBookList().stream().forEach(b -> {
                 sb.append("  " + b.getTitle() + " ");
             });
-//            System.out.println(sb.toString());
         });
-
-
-//        AuthorDTO joNesbo =mapService.findAuthorById(7L);
-//        Set<BookDTO> josBook = joNesbo.getBookList();
-//        BookDTO bosz =mapService.findBookById(600L);
-//        BookDTO istenek =mapService.findBookById(3L);
-//        josBook.add(bosz);
-//        josBook.add(istenek);
-//        System.out.println("josBook" + josBook);;
-//        joNesbo.setBookList(josBook);
-//        System.out.println("josbook "+ josbook);
-//        mapService.updateAuthor(joNesbo);
-//        System.out.println("jo" + jo);
-//        System.out.println("authors" + authors);
 
 
         authorService.saveAuthor();
@@ -68,7 +57,7 @@ public class IndexPageController {
         }
         model.addAttribute("pageNumbers", pageNumbers);
 
-        List<BookDTO> books = authorService.getAllBooks();
+        List<BookDTO> books = bookService.getAllBooks();
         model.addAttribute("books", books);
 
         return "index";

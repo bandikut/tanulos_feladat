@@ -36,16 +36,6 @@ public class AuthorService {
     @Autowired
     ModelMapper modelMapper;
 
-//    //mapped by manual method
-//    private AuthorDTO convertAuthorsBooksDTO(Author author) {
-//        AuthorDTO authorDTO = new AuthorDTO();
-//        authorDTO.setFirstName(author.getAuthorFirstName());
-//        authorDTO.setLastName(author.getAuthorLastName());
-//        Book book = author.getBook();
-//        authorDTO.setTitle(book.getTitle());
-//        return authorDTO;
-//    }
-
     //mapstructort is lehet használni
     private AuthorDTO convertAuthorsDTO(Author author) {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
@@ -85,8 +75,8 @@ public class AuthorService {
     }
 
     public Page<AuthorDTO> pagination(int index) {
-        int pageSize = 8;
-        int startItemIndex = index * pageSize;
+        var pageSize = 8;
+        var startItemIndex = index * pageSize;
         List<AuthorDTO> tempList;
 
         if (authorsListSize() < startItemIndex) {
@@ -96,7 +86,7 @@ public class AuthorService {
             tempList = getAllAuthors().subList(startItemIndex, toIndex);
             tempList.sort(Comparator.comparing(AuthorDTO::getFirstName));
         }
-        return new PageImpl<AuthorDTO>(tempList, PageRequest.of(index, pageSize), authorsListSize());
+        return new PageImpl<>(tempList, PageRequest.of(index, pageSize), authorsListSize());
         //TODO pageable-t leszedni repository-ból
     }
 
@@ -104,37 +94,16 @@ public class AuthorService {
         authorRepository.deleteById(id);
     }
 
-    //mapped by modelmapper method
-    private BookDTO convertBooksDTO(Book book) {
-        modelMapper.getConfiguration()
-                .setMatchingStrategy(MatchingStrategies.LOOSE);
-        BookDTO bookDTO = modelMapper
-                .map(book, BookDTO.class);
-        return bookDTO;
-    }
 
-    public List<BookDTO> getAllBooks() {
-        return ((List<Book>) bookRepository.findAll())
-                .stream()
-                .map(this::convertBooksDTO)
-                .collect(Collectors.toList());
-    }
-
-
-    public void addBook(BookDTO bookDTO) {
-        Book book = new ModelMapper().map(bookDTO, Book.class);
-        //addbook adja vissza a long id-t saveAndFlush-t +nézni, tranzakciókezelés
-        bookRepository.save(book);
-    }
 
 
     public void updateAuthor(AuthorDTO authorDTO) {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
-        Author author = modelMapper.map(authorDTO, Author.class);
+        var author = modelMapper.map(authorDTO, Author.class);
 
         //TODO ismétlés ne legyen
         if (authorRepository.findById(authorDTO.getId()).isPresent()) {
-            Author updateAuthor = authorRepository.findById(authorDTO.getId()).get();
+            var updateAuthor = authorRepository.findById(authorDTO.getId()).get();
             updateAuthor.setAuthorFirstName(author.getAuthorFirstName());
             updateAuthor.setAuthorLastName(author.getAuthorLastName());
             System.out.println("+++++ toupdate" + author.getBookList());
@@ -147,16 +116,7 @@ public class AuthorService {
 
     }
 
-    public BookDTO findBookById(Long id) {
-        BookDTO book;
-        //todo megoldani
-        if (bookRepository.findById(id).isPresent()) {
-            book = convertBooksDTO(bookRepository.findById(id).get());
-        } else {
-            book = null;
-        }
-        return book;
-    }
+
 
 
     //todo ezt innen megszüntenti
