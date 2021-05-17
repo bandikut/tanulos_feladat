@@ -6,7 +6,10 @@ import com.example.tanulos_feladat.service.AuthorService;
 import com.example.tanulos_feladat.service.BookService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -33,7 +36,7 @@ public class BookController {
         return "redirect:/addbook";
     }
 
-    @RequestMapping(value = "/viewbook{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/viewbook{id}")
     public String newBook(Model model,
                           @RequestParam("id") Long id) {
         BookDTO bookDTO = bookService.findBookById(id);
