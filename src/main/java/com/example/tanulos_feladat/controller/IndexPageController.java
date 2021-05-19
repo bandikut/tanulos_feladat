@@ -2,7 +2,6 @@ package com.example.tanulos_feladat.controller;
 
 import com.example.tanulos_feladat.dto.AuthorDTO;
 import com.example.tanulos_feladat.dto.BookDTO;
-import com.example.tanulos_feladat.service.AuthorService;
 import com.example.tanulos_feladat.service.AuthorServiceImpl;
 import com.example.tanulos_feladat.service.BookServiceImpl;
 import org.springframework.data.domain.Page;
@@ -61,6 +60,8 @@ public class IndexPageController {
         List<BookDTO> books = bookService.getAllBooks();
         model.addAttribute("books", books);
 
+        var headcount = authorService.numberOfAuthors();
+        System.out.println("headcount "+ headcount);
         return "index";
     }
 

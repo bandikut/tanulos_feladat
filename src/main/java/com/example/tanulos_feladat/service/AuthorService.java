@@ -10,6 +10,8 @@ public interface AuthorService {
 
     AuthorDTO convertAuthorsDTO(Author author);
 
+    Author convertDTOtoAuthor(AuthorDTO authorDTO);
+
     List<AuthorDTO> getAllAuthors();
 
     void addAuthor(AuthorDTO authorDTO);
@@ -25,4 +27,8 @@ public interface AuthorService {
     void deleteAuthor(Long id);
 
     void updateAuthor(AuthorDTO authorDTO);
+
+    List<Author> getAllAuthorsName();
+
+    Integer numberOfAuthors();
 }

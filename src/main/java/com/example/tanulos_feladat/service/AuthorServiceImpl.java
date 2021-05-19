@@ -24,7 +24,6 @@ public class AuthorServiceImpl implements AuthorService {
 
     AuthorRepository authorRepository;
     BookRepository bookRepository;
-
     ModelMapper modelMapper;
 
     public AuthorServiceImpl(AuthorRepository authorRepository, BookRepository bookRepository, ModelMapper modelMapper) {
@@ -36,9 +35,16 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public AuthorDTO convertAuthorsDTO(Author author) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
-        var authorDto = modelMapper.map(author, AuthorDTO.class);
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
+        AuthorDTO authorDto = modelMapper.map(author, AuthorDTO.class);
         return authorDto;
+    }
+
+    @Override
+    public Author convertDTOtoAuthor(AuthorDTO authorDTO) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
+        Author author = modelMapper.map(authorDTO, Author.class);
+        return author;
     }
 
     @Override
@@ -48,14 +54,19 @@ public class AuthorServiceImpl implements AuthorService {
                 .collect(Collectors.toList());
     }
 
-    //TODO custom queryből a repóból
-    private Integer authorsListSize() {
-        return getAllAuthors().size();
+    @Override
+    public List<Author> getAllAuthorsName() {
+        return authorRepository.getAllAuthorsName();
+    }
+
+    @Override
+    public Integer numberOfAuthors() {
+        return authorRepository.authorsNumber();
     }
 
     @Override
     public void addAuthor(AuthorDTO authorDTO) {
-        var author = new ModelMapper().map(authorDTO, Author.class);
+        Author author = new ModelMapper().map(authorDTO, Author.class);
         authorRepository.save(author);
     }
 
@@ -79,18 +90,18 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Page<AuthorDTO> pagination(int index) {
-        var pageSize = 8;
-        var startItemIndex = index * pageSize;
+        int pageSize = 8;
+        int startItemIndex = index * pageSize;
         List<AuthorDTO> tempList;
 
-        if (authorsListSize() < startItemIndex) {
+        if (numberOfAuthors() < startItemIndex) {
             tempList = Collections.emptyList();
         } else {
-            int toIndex = Math.min(startItemIndex + pageSize, authorsListSize());
+            int toIndex = Math.min(startItemIndex + pageSize, numberOfAuthors());
             tempList = getAllAuthors().subList(startItemIndex, toIndex);
             tempList.sort(Comparator.comparing(AuthorDTO::getFirstName));
         }
-        return new PageImpl<>(tempList, PageRequest.of(index, pageSize), authorsListSize());
+        return new PageImpl<>(tempList, PageRequest.of(index, pageSize), numberOfAuthors());
         //TODO pageable-t leszedni repository-ból
     }
 
@@ -102,11 +113,11 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public void updateAuthor(AuthorDTO authorDTO) {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
-        var author = modelMapper.map(authorDTO, Author.class);
+        Author author = modelMapper.map(authorDTO, Author.class);
 
         //TODO ismétlés ne legyen
         if (authorRepository.findById(authorDTO.getId()).isPresent()) {
-            var updateAuthor = authorRepository.findById(authorDTO.getId()).get();
+            Author updateAuthor = authorRepository.findById(authorDTO.getId()).get();
             updateAuthor.setAuthorFirstName(author.getAuthorFirstName());
             updateAuthor.setAuthorLastName(author.getAuthorLastName());
             System.out.println("+++++ toupdate" + author.getBookList());
@@ -125,13 +136,13 @@ public class AuthorServiceImpl implements AuthorService {
 
     public void saveAuthor() {
         Author orkeny = new Author();
-        orkeny.setId(114);
+        orkeny.setId(114L);
         orkeny.setAuthorFirstName("István");
         orkeny.setAuthorLastName("Örkény");
         Book b = new Book();
         b.setNumberOfPages(200);
         b.setIsbn("hsaihsiu");
-        b.setAvailable(true);
+        b.setIsAvailable(true);
         b.setTitle("macska");
         b.setId(1l);
         bookRepository.save(b);

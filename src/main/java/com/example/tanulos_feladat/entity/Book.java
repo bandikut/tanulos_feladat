@@ -23,7 +23,7 @@ public class Book {
 
     private String isbn;
 
-    private boolean isAvailable;
+    private Boolean isAvailable;
 
     private int numberOfPages;
 
