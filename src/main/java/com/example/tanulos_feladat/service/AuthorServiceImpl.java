@@ -55,6 +55,36 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    public void addAuthor(AuthorDTO authorDTO) {
+        boolean exist = authorRepository.existsAuthorByAuthorFirstNameIgnoreCaseAndAuthorLastNameIgnoreCase(authorDTO.getFirstName(), authorDTO.getLastName());
+        if (!exist) {
+            authorRepository.saveAndFlush(convertDTOtoAuthor(authorDTO));
+        }
+    }
+
+    @Override
+    public void deleteAuthor(Long id) {
+        authorRepository.deleteById(id);
+    }
+
+    @Override
+    public void updateAuthor(AuthorDTO authorDTO) {
+        boolean exist = authorRepository.existsById(authorDTO.getId());
+
+        if (exist) {
+            Author updateAuthor = authorRepository.getOne(authorDTO.getId());
+            updateAuthor.setAuthorFirstName(authorDTO.getFirstName());
+            updateAuthor.setAuthorLastName(authorDTO.getLastName());
+            updateAuthor.getBookList()
+                    .addAll(authorDTO.getBookList().stream()
+                            .map(i -> modelMapper.map(i, Book.class))
+                            .collect(Collectors.toList()));
+            authorRepository.saveAndFlush(updateAuthor);
+        }
+
+    }
+
+    @Override
     public List<Author> getAllAuthorsName() {
         return authorRepository.getAllAuthorsName();
     }
@@ -65,25 +95,21 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void addAuthor(AuthorDTO authorDTO) {
-        Author author = new ModelMapper().map(authorDTO, Author.class);
-        authorRepository.save(author);
-    }
-
-    @Override
-    public void removeAuthor(Long id) {
-        authorRepository.deleteById(id);
-    }
-
-    @Override
     public AuthorDTO findAuthorById(Long id) {
-        //getone lehibakezeli, ha nincs ilyen id
-        return convertAuthorsDTO(authorRepository.getOne(id));
+        Author author = authorRepository.getOne(id);
+        return convertAuthorsDTO(author);
     }
 
     @Override
-    public List<AuthorDTO> findAuthorsByFirstname(String text) {
-        return authorRepository.findByAuthorFirstNameContainingIgnoreCase(text)
+    public List<AuthorDTO> findAuthorsInWholeName(String name) {
+        return  authorRepository.findAuthorInWholeName(name)
+                .stream().map(this::convertAuthorsDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AuthorDTO> findAuthorsByFirstname(String firstName) {
+        return authorRepository.findByAuthorFirstNameContainingIgnoreCase(firstName)
                 .stream().map(this::convertAuthorsDTO)
                 .collect(Collectors.toList());
     }
@@ -102,53 +128,6 @@ public class AuthorServiceImpl implements AuthorService {
             tempList.sort(Comparator.comparing(AuthorDTO::getFirstName));
         }
         return new PageImpl<>(tempList, PageRequest.of(index, pageSize), numberOfAuthors());
-        //TODO pageable-t leszedni repository-ból
     }
 
-    @Override
-    public void deleteAuthor(Long id) {
-        authorRepository.deleteById(id);
-    }
-
-    @Override
-    public void updateAuthor(AuthorDTO authorDTO) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
-        Author author = modelMapper.map(authorDTO, Author.class);
-
-        //TODO ismétlés ne legyen
-        if (authorRepository.findById(authorDTO.getId()).isPresent()) {
-            Author updateAuthor = authorRepository.findById(authorDTO.getId()).get();
-            updateAuthor.setAuthorFirstName(author.getAuthorFirstName());
-            updateAuthor.setAuthorLastName(author.getAuthorLastName());
-            System.out.println("+++++ toupdate" + author.getBookList());
-            updateAuthor.setBookList(author.getBookList());
-            Author savedAuthor = authorRepository.saveAndFlush(updateAuthor);
-//            if (authorRepository.findById(savedAuthor.getId()).isPresent()) {
-//                System.out.println("sikeres mentés");
-//            }
-        }
-
-    }
-
-
-    //todo ezt innen megszüntenti
-    //todo átírni külön a serviceket implementationokre
-
-    public void saveAuthor() {
-        Author orkeny = new Author();
-        orkeny.setId(114L);
-        orkeny.setAuthorFirstName("István");
-        orkeny.setAuthorLastName("Örkény");
-        Book b = new Book();
-        b.setNumberOfPages(200);
-        b.setIsbn("hsaihsiu");
-        b.setIsAvailable(true);
-        b.setTitle("macska");
-        b.setId(1l);
-        bookRepository.save(b);
-        orkeny.getBookList().add(b);
-        System.out.println("b" + b);
-        authorRepository.save(orkeny);
-        System.out.println("orkeny" + orkeny);
-    }
 }

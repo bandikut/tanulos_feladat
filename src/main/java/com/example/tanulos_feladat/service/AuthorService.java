@@ -16,9 +16,9 @@ public interface AuthorService {
 
     void addAuthor(AuthorDTO authorDTO);
 
-    void removeAuthor(Long id);
-
     AuthorDTO findAuthorById(Long id);
+
+    List<AuthorDTO> findAuthorsInWholeName(String firstName);
 
     List<AuthorDTO> findAuthorsByFirstname(String text);
 

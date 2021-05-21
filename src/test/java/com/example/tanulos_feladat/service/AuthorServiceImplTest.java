@@ -4,6 +4,7 @@ import com.example.tanulos_feladat.dto.AuthorDTO;
 import com.example.tanulos_feladat.dto.BookDTO;
 import com.example.tanulos_feladat.entity.Author;
 import com.example.tanulos_feladat.entity.Book;
+import com.example.tanulos_feladat.repository.AuthorRepository;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -17,7 +18,16 @@ class AuthorServiceImplTest {
 
     private ModelMapper modelMapper = new ModelMapper();
 
+    private AuthorRepository authorRepository;
+    private AuthorServiceImpl authorService;
+
+    public AuthorServiceImplTest(AuthorRepository authorRepository, AuthorServiceImpl authorService) {
+        this.authorRepository = authorRepository;
+        this.authorService = authorService;
+    }
+
     @Test
+        // Author convertDTOtoAuthor(AuthorDTO authorDTO) tesztje
     void whenConvertAuthorDTOToAuthorCorrect() {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
 
@@ -42,6 +52,7 @@ class AuthorServiceImplTest {
     }
 
     @Test
+    // AuthorDTO convertAuthorsDTO(Author author) tesztje
     void whenConvertAuthorToAuthorDTOCorrect() {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         AuthorDTO stephenK = new AuthorDTO();
@@ -62,4 +73,5 @@ class AuthorServiceImplTest {
         assertEquals(stephenK.getLastName(), author.getAuthorLastName());
 //        assertEquals(stephenK.getBookList(), author.getBookList()); //book != bookdto
     }
+
 }

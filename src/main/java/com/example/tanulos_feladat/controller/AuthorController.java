@@ -40,7 +40,7 @@ public class AuthorController {
     @GetMapping(value = "/viewauthor")
     public String authorsBooks(Model model,
                                @RequestParam("id") Long id) {
-        var authorDTO = authorService.findAuthorById(id);
+        AuthorDTO authorDTO = authorService.findAuthorById(id);
         model.addAttribute("author", authorDTO);
         List<BookDTO> books = bookService.getAllBooks();
         model.addAttribute("books", books);
@@ -50,7 +50,6 @@ public class AuthorController {
     @GetMapping(value = "/deleteauthor")
     public String deleteAuthor(@RequestParam("id") Long id) {
         authorService.deleteAuthor(id);
-        System.out.println("id :" + id);
         return "redirect:/allbook";
     }
 

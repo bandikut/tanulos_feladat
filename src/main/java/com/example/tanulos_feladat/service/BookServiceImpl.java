@@ -1,6 +1,7 @@
 package com.example.tanulos_feladat.service;
 
 import com.example.tanulos_feladat.dto.BookDTO;
+import com.example.tanulos_feladat.entity.Author;
 import com.example.tanulos_feladat.entity.Book;
 import com.example.tanulos_feladat.repository.BookRepository;
 import org.modelmapper.ModelMapper;
@@ -24,39 +25,66 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDTO convertBooksDTO(Book book) {
+    public BookDTO convertBooksToDTO(Book book) {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
-        var bookDto = modelMapper.map(book, BookDTO.class);
+        BookDTO bookDto = modelMapper.map(book, BookDTO.class);
         return bookDto;
     }
 
     @Override
+    public Book convertBooksDTOToBook(BookDTO bookDTO) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+        Book book = modelMapper.map(bookDTO, Book.class);
+        return book;
+    }
+
+    @Override
     public List<BookDTO> getAllBooks() {
-        return ((List<Book>) bookRepository.findAll())
+        return bookRepository.findAll()
                 .stream()
-                .map(this::convertBooksDTO)
+                .map(this::convertBooksToDTO)
                 .collect(Collectors.toList());
     }
 
 
     @Override
     public void addBook(BookDTO bookDTO) {
-        var book = new ModelMapper().map(bookDTO, Book.class);
-        //addbook adja vissza a long id-t saveAndFlush-t +nézni, tranzakciókezelés
-        bookRepository.save(book);
+        boolean exist = bookRepository.existsBooksByIsbn(bookDTO.getIsbn());
+
+        if (!exist || bookDTO.getIsbn().isEmpty()) {
+            Book book = convertBooksDTOToBook(bookDTO);
+            bookRepository.saveAndFlush(book);
+        }
+    }
+
+    @Override
+    public void updateBook(BookDTO bookDTO) {
+        boolean exist = bookRepository.existsById(bookDTO.getId());
+
+        if (exist) {
+            Book updateBook = bookRepository.getOne(bookDTO.getId());
+            updateBook.setTitle(bookDTO.getTitle());
+            updateBook.setIsAvailable(bookDTO.getIsAvailable());
+            updateBook.setIsbn(bookDTO.getIsbn());
+            updateBook.setNumberOfPages(bookDTO.getNumberOfPages());
+            updateBook.getAuthorList()
+                    .addAll(bookDTO.getAuthorDTOList().stream()
+                            .map(i -> modelMapper.map(i, Author.class))
+                            .collect(Collectors.toList()));
+            bookRepository.saveAndFlush(updateBook);
+        }
+
     }
 
     @Override
     public BookDTO findBookById(Long id) {
-        BookDTO book;
-        //todo megoldani
-        if (bookRepository.findById(id).isPresent()) {
-            book = convertBooksDTO(bookRepository.findById(id).get());
-        } else {
-            book = null;
-        }
-        return book;
+        Book book =bookRepository.getOne(id);
+        return convertBooksToDTO(book);
     }
 
+    @Override
+    public Integer numberOfBooks() {
+        return bookRepository.booksNumber();
+    }
 
 }

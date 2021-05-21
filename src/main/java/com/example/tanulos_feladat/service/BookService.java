@@ -7,11 +7,17 @@ import java.util.List;
 
 public interface BookService {
 
-    BookDTO convertBooksDTO(Book book);
+    BookDTO convertBooksToDTO(Book book);
 
-    List<BookDTO> getAllBooks();
+    Book convertBooksDTOToBook(BookDTO bookDTO);
 
     void addBook(BookDTO bookDTO);
 
+    void updateBook(BookDTO bookDTO);
+
+    List<BookDTO> getAllBooks();
+
     BookDTO findBookById(Long id);
+
+    Integer numberOfBooks();
 }

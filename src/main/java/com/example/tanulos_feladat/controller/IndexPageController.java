@@ -37,13 +37,9 @@ public class IndexPageController {
         authors.stream().forEach(i -> {
             StringBuilder sb = new StringBuilder();
             sb.append(i.getFirstName() + " ").append(i.getLastName());
-            i.getBookList().stream().forEach(b -> {
-                sb.append("  " + b.getTitle() + " ");
-            });
+            i.getBookList().stream().forEach(b -> sb.append("  " + b.getTitle() + " "));
         });
 
-
-        authorService.saveAuthor();
 
         int currentPage = pageIndex.orElse(0);
         Page<AuthorDTO> authorPagination = authorService.pagination(currentPage);
@@ -60,8 +56,6 @@ public class IndexPageController {
         List<BookDTO> books = bookService.getAllBooks();
         model.addAttribute("books", books);
 
-        var headcount = authorService.numberOfAuthors();
-        System.out.println("headcount "+ headcount);
         return "index";
     }
 

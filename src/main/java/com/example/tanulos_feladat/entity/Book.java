@@ -1,12 +1,13 @@
 package com.example.tanulos_feladat.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@NoArgsConstructor
 @Data
 @Entity
 @Table(
@@ -27,7 +28,7 @@ public class Book {
 
     private int numberOfPages;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "book_author",
             joinColumns = @JoinColumn(name = "book_id"
                     ,foreignKey = @ForeignKey(name = "fk_author_id")
@@ -38,4 +39,12 @@ public class Book {
     )
     private List<Author> authorList = new ArrayList<>();
 
+
+    public Book(Long id, String title, String isbn, Boolean isAvailable, int numberOfPages) {
+        this.id = id;
+        this.title = title;
+        this.isbn = isbn;
+        this.isAvailable = isAvailable;
+        this.numberOfPages = numberOfPages;
+    }
 }

@@ -21,6 +21,7 @@
                 <div class="form-group col-md-6">
                     <label for="title" class="display-4">Cím</label>
                     <input th:field="*{title}" type="text" class="form-control" id="title">
+                    <input type="hidden" th:field="*{id}">
                 </div>
                 <div class="form-group col-md-6">
                     <label for="pNum" class="display-4">Oldalszám</label>
@@ -39,6 +40,8 @@
                            id="isAvailable">
                 </div>
             </div>
+            <div class="form-row">
+            </div>
             <div class="form-row d-flex justify-content-sm-center mt-2 mb-4">
                 <input type="submit" class="btn  btn-success btn-block mt-2 mb-2" value="mentés"/>
                 <input type="reset" class="btn  btn-danger m-2" value="kiürít"/>
@@ -46,23 +49,57 @@
             </div>
         </form>
     </div>
+    <div th:if="${!authorsOfBook.empty}">
+        <div th:each="auth : ${authorsOfBook}">
+            <div th:text="${auth.firstName + ' ' + auth.lastName}" style="font-size: 2rem;  color: #293C5B"></div>
+        </div>
+    </div>
 
     <div class="col-md-6">
-        <form>
+        <form th:action="@{/addbook/searchinauthors}" method="get">
             <div class="form-row">
                 <div class="form-group col-md-12">
-                    <label for="searchValue" class="display-4 " style="color: #285756 !important;">Keresés a könyv
-                        címére a moly.hu-n</label>
-                    <input type="text" class="form-control" id="searchValue">
+                    <label for="searchAuthor" class="display-4 " style="color: #285756 !important;">Keresés a meglévő
+                        szerzők között</label>
+                    <input name="authorname" type="text" class="form-control" id="searchAuthor" minlength="3">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-12">
-                    <button onclick="getBookFromMolyApi()" class="form-control btn btn-success" id="goSearch">Keresés</button>
+                    <input type="submit" class="form-control btn btn-success" id="goSearch" value="Keresés"/>
                 </div>
             </div>
         </form>
+
+        <div th:if="${!authorList.empty}" th:each="author : ${authorList}"
+             class="d-flex justify-content-sm-around align-items-center">
+            <div th:text="${author.firstName + ' ' + author.lastName}" style="font-size: 2rem; color: #293C5B"></div>
+            <div>
+                <form th:action="@{/addbook/addauthor}" method="get">
+                    <input type="text" name="authId" th:value="*{author.getId()}" hidden="hidden">
+                    <input type="submit" class="btn btn-dark" value="+"/>
+                </form>
+            </div>
+        </div>
     </div>
+
+    <!--    <div class="col-md-6">-->
+    <!--        <form>-->
+    <!--            <div class="form-row">-->
+    <!--                <div class="form-group col-md-12">-->
+    <!--                    <label for="searchValue" class="display-4 " style="color: #285756 !important;">Keresés a könyv-->
+    <!--                        címére a moly.hu-n</label>-->
+    <!--                    <input type="text" class="form-control" id="searchValue">-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--            <div class="form-row">-->
+    <!--                <div class="form-group col-md-12">-->
+    <!--                    <button onclick="getBookFromMolyApi()" class="form-control btn btn-success" id="goSearch">Keresés-->
+    <!--                    </button>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </form>-->
+    <!--    </div>-->
 
 </div>
 
