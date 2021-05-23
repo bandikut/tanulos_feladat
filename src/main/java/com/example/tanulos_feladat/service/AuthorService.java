@@ -2,7 +2,6 @@ package com.example.tanulos_feladat.service;
 
 import com.example.tanulos_feladat.dto.AuthorDTO;
 import com.example.tanulos_feladat.entity.Author;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -22,7 +21,7 @@ public interface AuthorService {
 
     List<AuthorDTO> findAuthorsByFirstname(String text);
 
-    Page<AuthorDTO> pagination(int index);
+    List<AuthorDTO> pagination(Integer startIndex, Integer size);
 
     void deleteAuthor(Long id);
 

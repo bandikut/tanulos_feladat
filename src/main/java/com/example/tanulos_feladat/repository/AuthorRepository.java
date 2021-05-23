@@ -23,6 +23,12 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
 
     List<Author> findByAuthorFirstNameContainingIgnoreCase(String text1);
 
-    @Query("select a from Author a where lower(a.authorLastName) like %:name% or lower(a.authorFirstName)  like %:name%")
+
+    @Query(nativeQuery = true, value = "SELECT * FROM Author a WHERE LOWER(a.author_last_name) LIKE LOWER(CONCAT('%',:name, '%'))" +
+            "OR LOWER(a.author_first_name) LIKE LOWER(CONCAT('%',:name, '%'))")
     List<Author> findAuthorInWholeName(@Param("name") String name);
+
+    @Query(nativeQuery = true, value = "select *  from Author a where a.id > :index order by a.author_last_name asc fetch first :size rows only ")
+    List<Author> cardPagination(@Param("index") Integer index, @Param("size") Integer size);
+
 }

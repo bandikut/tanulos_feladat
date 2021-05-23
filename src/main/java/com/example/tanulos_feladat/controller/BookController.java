@@ -40,8 +40,10 @@ public class BookController {
 
     @GetMapping(value = "/addbook/searchinauthors")
     public String searchInAuthors(String authorname) {
-        searchAuthors.clear();
+//        searchAuthors.clear();
+        System.out.println("authorname "+ authorname);
         searchAuthors = authorService.findAuthorsInWholeName(authorname);
+        System.out.println("searchAuthors "+ searchAuthors);
         return redirectToAddbook;
     }
 
@@ -55,8 +57,8 @@ public class BookController {
     public String saveBook(@ModelAttribute BookDTO bookForm)  {
         bookForm.getAuthorDTOList().addAll(authorsOfBook);
         bookService.addBook(bookForm);
-        authorsOfBook.clear();
-        searchAuthors.clear();
+//        authorsOfBook.clear();
+//        searchAuthors.clear();
         return redirectToAddbook;
     }
 

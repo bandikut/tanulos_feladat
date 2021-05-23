@@ -7,14 +7,10 @@ import com.example.tanulos_feladat.repository.AuthorRepository;
 import com.example.tanulos_feladat.repository.BookRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -115,19 +111,17 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Page<AuthorDTO> pagination(int index) {
-        int pageSize = 8;
-        int startItemIndex = index * pageSize;
-        List<AuthorDTO> tempList;
+    public List<AuthorDTO> pagination(Integer index, Integer size) {
+        /** index -> index of a page
+         * startItemIndex -> index of the first card of the page*/
+        Integer startItemIndex = index * size;
 
-        if (numberOfAuthors() < startItemIndex) {
-            tempList = Collections.emptyList();
+        if (numberOfAuthors() < startItemIndex){
+           return  Collections.emptyList();
         } else {
-            int toIndex = Math.min(startItemIndex + pageSize, numberOfAuthors());
-            tempList = getAllAuthors().subList(startItemIndex, toIndex);
-            tempList.sort(Comparator.comparing(AuthorDTO::getFirstName));
+          return  authorRepository.cardPagination(startItemIndex, size)
+           .stream().map(this::convertAuthorsDTO).collect(Collectors.toList());
         }
-        return new PageImpl<>(tempList, PageRequest.of(index, pageSize), numberOfAuthors());
     }
 
 }
