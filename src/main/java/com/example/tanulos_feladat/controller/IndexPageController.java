@@ -1,23 +1,36 @@
 package com.example.tanulos_feladat.controller;
 
+import com.example.tanulos_feladat.client.BookClient;
 import com.example.tanulos_feladat.dto.AuthorDTO;
 import com.example.tanulos_feladat.dto.BookDTO;
+import com.example.tanulos_feladat.entity.MolyBook;
 import com.example.tanulos_feladat.service.AuthorServiceImpl;
 import com.example.tanulos_feladat.service.BookServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+@Slf4j
 @Controller
 public class IndexPageController {
 
     private AuthorServiceImpl authorService;
     private BookServiceImpl bookService;
+    private BookClient bookClient;
+
+   public void setup(){
+    MolyBookControllerFeignClientBuilder feignController = new MolyBookControllerFeignClientBuilder();
+    bookClient = feignController.getBookClient();
+   }
 
     public IndexPageController(AuthorServiceImpl authorService, BookServiceImpl bookService) {
         this.authorService = authorService;
@@ -48,6 +61,14 @@ public class IndexPageController {
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("pageNumbers", pageNumbers);
         model.addAttribute("books", books);
+
+       setup();
+
+
+       Object list = bookClient.findAll();
+//       List<MolyBook> list = bookClient.findAll();
+        System.out.println(list);
+        System.out.println("bookClient "+ bookClient);
 
         return "index";
     }

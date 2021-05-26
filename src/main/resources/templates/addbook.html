@@ -15,12 +15,13 @@
 <div class="container-fluid d-flex justify-content-center align-items-center flex-column"
      style="min-height: 100vh; background-color: #F39A00">
     <div class="col-md-6">
-        <form th:action="@{/saveBook}" class="" method="post" th:object="${nbook}"
+        <form th:action="@{/savebook}" class="" method="post" th:object="${nbook}"
               style="color: #285756 !important;">
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="title" class="display-4">Cím</label>
                     <input th:field="*{title}" type="text" class="form-control" id="title">
+<!--                    <p th:if="${#fields.hasErrors('title')}">cím!</p>-->
                     <input type="hidden" th:field="*{id}">
                 </div>
                 <div class="form-group col-md-6">
@@ -44,16 +45,30 @@
             </div>
             <div class="form-row d-flex justify-content-sm-center mt-2 mb-4">
                 <input type="submit" class="btn  btn-success btn-block mt-2 mb-2" value="mentés"/>
-                <input type="reset" class="btn  btn-danger m-2" value="kiürít"/>
+                <a type="reset" class="btn  btn-danger m-2" th:href="@{/addbook/reset}">kiürít</a>
                 <a th:href="@{allbook}" class="btn btn-dark m-2">vissza az összeshez</a>
             </div>
         </form>
-    </div>
-    <div th:if="${!authorsOfBook.empty}">
-        <div th:each="auth : ${authorsOfBook}">
-            <div th:text="${auth.firstName + ' ' + auth.lastName}" style="font-size: 2rem;  color: #293C5B"></div>
+
+<!--        <h1 th:if="${nbook}">-->
+<!--            <p th:text="${'You have successfully submitted poem titled - '+ nbook?.title}"/>-->
+<!--&lt;!&ndash;            Click <a th:href="@{/poem/submit}"> here</a> to submit more.&ndash;&gt;-->
+<!--        </h1>-->
+        <div><span class="display-4" style="color: #285756">Szerző(k):</span></div>
+        <div th:if="${!authorsOfBook.empty}" th:each="auth : ${authorsOfBook}"
+             class="container-fluid d-flex justify-content-sm-around align-items-center">
+            <div class="col-lg-10" th:text="${auth.firstName + ' ' + auth.lastName}"
+                 style="font-size: 2rem;  color: #293C5B">
+            </div>
+            <div class="col-lg-2">
+                <form th:action="@{/addbook/removeauthor}" method="get">
+                    <input type="text" name="authId" th:value="*{auth.getId()}" hidden="hidden">
+                    <input type="submit" class="btn btn-dark" value="-"/>
+                </form>
+            </div>
         </div>
     </div>
+
 
     <div class="col-md-6">
         <form th:action="@{/addbook/searchinauthors}" method="get">
@@ -72,9 +87,10 @@
         </form>
 
         <div th:if="${!authorList.empty}" th:each="author : ${authorList}"
-             class="d-flex justify-content-sm-around align-items-center">
-            <div th:text="${author.firstName + ' ' + author.lastName}" style="font-size: 2rem; color: #293C5B"></div>
-            <div>
+             class="container-fluid d-flex justify-content-sm-around align-items-center">
+            <div class="col-lg-10" th:text="${author.firstName + ' ' + author.lastName}"
+                 style="font-size: 2rem; color: #293C5B"></div>
+            <div class="col-lg-2">
                 <form th:action="@{/addbook/addauthor}" method="get">
                     <input type="text" name="authId" th:value="*{author.getId()}" hidden="hidden">
                     <input type="submit" class="btn btn-dark" value="+"/>

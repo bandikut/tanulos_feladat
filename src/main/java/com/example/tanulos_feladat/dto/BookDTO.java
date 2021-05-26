@@ -3,6 +3,7 @@ package com.example.tanulos_feladat.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +19,15 @@ public class BookDTO {
     private Integer numberOfPages;
     private List<AuthorDTO> authorDTOList = new ArrayList<>();
 
-    public BookDTO(Long id, String title, String isbn, Boolean isAvailable, Integer numberOfPages) {
-        this.id = id;
-        this.title = title;
-        this.isbn = isbn;
-        this.isAvailable = isAvailable;
-        this.numberOfPages = numberOfPages;
+//    public BookDTO(Long id, String title, String isbn, Boolean isAvailable, Integer numberOfPages) {
+//        this.id = id;
+//        this.title = title;
+//        this.isbn = isbn;
+//        this.isAvailable = isAvailable;
+//        this.numberOfPages = numberOfPages;
+//    }
+
+    public static  boolean isValid(BookDTO bookDTO) {
+        return bookDTO != null && Strings.isNotBlank(bookDTO.getTitle());
     }
 }

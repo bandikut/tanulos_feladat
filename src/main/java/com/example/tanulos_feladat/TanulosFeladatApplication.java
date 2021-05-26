@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableTransactionManagement
-
 public class TanulosFeladatApplication {
     @Bean
     public ModelMapper modelMapper() {

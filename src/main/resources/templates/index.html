@@ -27,14 +27,12 @@
                 <div class="card-title text-light p-2" style="background-color: #293C5B">
                     <h5 class="card-title" th:text="${author.lastName} +',  '+  ${author.firstName}">Card title</h5>
                 </div>
-                <div class="card-body">
-                    <h6>Könyvei</h6>
-                    <p th:if="${author.bookList.empty}">
-                        <span>Nincsenek könyvei</span>
-                    </p>
-                    <p th:each="book : ${author.bookList}">
-                        <span th:text="${book.title}"></span>
-                    </p>
+                <div class="card-body" style="max-height: 350px">
+                    <p><strong>Könyvei:</strong>
+                        <span th:if="${author.bookList.empty}">Nincsenek könyvei </span>
+                        <span th:each="book : ${author.bookList}">
+                        <span th:text="${book.title} + ', '"></span>
+                    </span></p>
                 </div>
                 <div class="card-footer">
                     <a href="#" th:href="@{/viewauthor(id=${author.id})}"
@@ -71,7 +69,7 @@
             <thead>
             <tr>
                 <th> cím</th>
-<!--                <th> szerző(k)</th>-->
+                <!--                <th> szerző(k)</th>-->
                 <th> oldalak száma</th>
                 <th> megvan?</th>
                 <th> ISBN</th>
@@ -85,9 +83,9 @@
             </tr>
             <tr th:each="book : ${books}">
                 <td><span th:text="${book.title}"> cím </span></td>
-<!--                <td th:each="author : ${book.authorDTOList}">-->
-<!--                    <span th:text="${author.lastName} + ', ' + ${author.firstName}"> szerző(k) </span>-->
-<!--                </td>-->
+                <!--                <td th:each="author : ${book.authorDTOList}">-->
+                <!--                    <span th:text="${author.lastName} + ', ' + ${author.firstName}"> szerző(k) </span>-->
+                <!--                </td>-->
                 <td><span th:text="${book.numberOfPages}"> oldalak száma </span></td>
                 <td><span th:text="${book.isAvailable} ? 'megvan' : 'nincs meg'"> megvan? </span></td>
                 <td><span th:text="${book.isbn}"> ISBN </span></td>
