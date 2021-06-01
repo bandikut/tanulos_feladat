@@ -3,7 +3,6 @@ package com.example.tanulos_feladat.controller;
 import com.example.tanulos_feladat.client.BookClient;
 import com.example.tanulos_feladat.dto.AuthorDTO;
 import com.example.tanulos_feladat.dto.BookDTO;
-import com.example.tanulos_feladat.entity.MolyBook;
 import com.example.tanulos_feladat.service.AuthorServiceImpl;
 import com.example.tanulos_feladat.service.BookServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +36,12 @@ public class IndexPageController {
         this.bookService = bookService;
     }
 
+    /**
+     *
+     * @param model
+     * @param pageIndex
+     * @return
+     */
     @GetMapping(value = {"/", "/allbook**"})
     public String indexPage(
             Model model,

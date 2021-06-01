@@ -1,12 +1,9 @@
 package com.example.tanulos_feladat.client;
 
-import com.example.tanulos_feladat.entity.MolyBook;
-import com.example.tanulos_feladat.entity.MolyBooks;
+import com.example.tanulos_feladat.dto.MolyBook;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
-
-import java.util.List;
 
 public interface BookClient {
     @RequestLine("GET /{title}")

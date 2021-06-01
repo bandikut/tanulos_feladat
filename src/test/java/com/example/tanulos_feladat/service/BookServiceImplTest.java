@@ -30,7 +30,7 @@ class BookServiceImplTest {
         egypercesek.getAuthorList().add(stephenK);
 
         BookDTO bookDTO = modelMapper.map(egypercesek, BookDTO.class);
-        assertEquals(egypercesek.getId(), bookDTO.getId());
+        assertEquals(egypercesek.getId(), bookDTO.getId()); //todo paraméterként beletenni, h minek kellene lennie
         assertEquals(egypercesek.getTitle(), bookDTO.getTitle());
         assertEquals(egypercesek.getIsbn(), bookDTO.getIsbn());
         assertEquals(egypercesek.getNumberOfPages(), bookDTO.getNumberOfPages());

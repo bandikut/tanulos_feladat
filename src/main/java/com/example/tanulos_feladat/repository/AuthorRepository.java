@@ -24,6 +24,7 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
     List<Author> findByAuthorFirstNameContainingIgnoreCase(String text1);
 
 
+    //todo átírni paegable-re
     @Query(nativeQuery = true, value = "SELECT * FROM Author a WHERE LOWER(a.author_last_name) LIKE LOWER(CONCAT('%',:name, '%'))" +
             "OR LOWER(a.author_first_name) LIKE LOWER(CONCAT('%',:name, '%'))")
     List<Author> findAuthorInWholeName(@Param("name") String name);

@@ -1,4 +1,4 @@
-package com.example.tanulos_feladat.entity;
+package com.example.tanulos_feladat.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

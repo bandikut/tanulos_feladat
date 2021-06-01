@@ -29,14 +29,14 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
 
-    @Override
+
     public AuthorDTO convertAuthorsDTO(Author author) {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
         AuthorDTO authorDto = modelMapper.map(author, AuthorDTO.class);
         return authorDto;
     }
 
-    @Override
+
     public Author convertDTOtoAuthor(AuthorDTO authorDTO) {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
         Author author = modelMapper.map(authorDTO, Author.class);
@@ -110,10 +110,14 @@ public class AuthorServiceImpl implements AuthorService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Visszaadja a card paginationt.
+     * @param index
+     * @param size
+     * @return
+     */
     @Override
     public List<AuthorDTO> pagination(Integer index, Integer size) {
-        /** index -> index of a page
-         * startItemIndex -> index of the first card of the page*/
         Integer startItemIndex = index * size;
 
         if (numberOfAuthors() < startItemIndex){

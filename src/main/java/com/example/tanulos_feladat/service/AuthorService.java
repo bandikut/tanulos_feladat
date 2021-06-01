@@ -7,9 +7,7 @@ import java.util.List;
 
 public interface AuthorService {
 
-    AuthorDTO convertAuthorsDTO(Author author);
-
-    Author convertDTOtoAuthor(AuthorDTO authorDTO);
+//
 
     List<AuthorDTO> getAllAuthors();
 
